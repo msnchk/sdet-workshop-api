@@ -24,7 +24,7 @@ jobs:
       - name: Start containers
         run: |
             cd simbirsoft_sdet_project
-            docker-compose up --build -d
+            docker compose up --build -d
             sleep 10
 
       - name: Set up JDK 17
@@ -54,4 +54,4 @@ jobs:
         if: always()
         run: |
             cd simbirsoft_sdet_project
-            docker-compose down
+            docker compose down
