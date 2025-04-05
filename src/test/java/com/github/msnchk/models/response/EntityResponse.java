@@ -2,12 +2,13 @@ package com.github.msnchk.models.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class EntityResponse {
-    private int id;
+    private String id;
     private String title;
     private boolean verified;
 

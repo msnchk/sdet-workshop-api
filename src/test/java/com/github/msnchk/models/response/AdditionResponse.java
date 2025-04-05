@@ -1,11 +1,11 @@
 package com.github.msnchk.models.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class AdditionResponse {
-    private int id;
+    private String id;
 
     @JsonProperty("additional_info")
     private String additionalInfo;

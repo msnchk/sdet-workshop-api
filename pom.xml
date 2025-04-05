@@ -14,7 +14,7 @@
 
         <allure.version>2.29.1</allure.version>
         <aspectj.version>1.9.22.1</aspectj.version>
-        <suiteXmlFile>src/test/resources/suites/api_tests_parallel.xml</suiteXmlFile>
+        <suiteXmlFile>src/test/resources/suits/api_tests_parallel.xml</suiteXmlFile>
     </properties>
 
     <dependencyManagement>
