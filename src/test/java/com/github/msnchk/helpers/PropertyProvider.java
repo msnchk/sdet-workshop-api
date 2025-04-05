@@ -47,16 +47,15 @@ public class PropertyProvider {
      * @throws IllegalArgumentException если ключ отсутствует или значение пустое
      */
     public String getProperty(String key) {
-        synchronized (properties) {
-            if (!properties.containsKey(key)) {
-                throw new IllegalArgumentException("Ключ '" + key + "' отсутствует в properties");
-            }
-            String value = properties.getProperty(key);
-            if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("Значение для ключа '" + key + "' отсутствует или пусто");
-            }
-            return value;
+        if (!properties.containsKey(key)) {
+            throw new IllegalArgumentException("Ключ '" + key + "' отсутствует в properties");
         }
+        String value = properties.getProperty(key);
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("Значение для ключа '" + key + "' отсутствует или пусто");
+        }
+        return value;
     }
 }
+
 
