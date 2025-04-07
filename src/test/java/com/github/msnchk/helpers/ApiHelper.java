@@ -2,6 +2,7 @@ package com.github.msnchk.helpers;
 
 import com.github.msnchk.models.request.EntityRequest;
 import com.github.msnchk.models.response.EntityResponse;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.mapper.ObjectMapperType;
 import io.restassured.specification.RequestSpecification;
@@ -42,6 +43,7 @@ public class ApiHelper {
      * @param entity объект запроса {@code EntityRequest}
      * @return строка с ID созданной сущности
      */
+    @Step("Create a new entity via API")
     public String createEntity(EntityRequest entity) {
         return RestAssured.given()
                 .spec(requestSpecification)
@@ -59,6 +61,7 @@ public class ApiHelper {
      * @param entities список объектов {@code EntityRequest}
      * @return список строк с ID созданных сущностей
      */
+    @Step("Create a list of entities via API")
     public List<String> createEntities(List<EntityRequest> entities) {
         List<String> ids = new ArrayList<>();
         for (EntityRequest entity : entities) {
@@ -73,6 +76,7 @@ public class ApiHelper {
      * @param title заголовок для всех сущностей
      * @return список сгенерированных сущностей
      */
+    @Step("Generate a list of entities with the title: {title}")
     public List<EntityRequest> generateListOfTaggedEntities(String title){
         List<EntityRequest> entities = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -88,6 +92,7 @@ public class ApiHelper {
      *
      * @param entityId ID сущности
      */
+    @Step("Delete entity with ID: {entityId}")
     public void deleteEntity(String entityId) {
         RestAssured.given()
                 .spec(requestSpecification)
@@ -104,6 +109,7 @@ public class ApiHelper {
      * @param entityId ID сущности
      * @return объект {@code EntityResponse}, представляющий сущность
      */
+    @Step("Get entity by ID: {entityId}")
     public EntityResponse getEntity(String entityId) {
         return RestAssured.given()
                 .spec(requestSpecification)
