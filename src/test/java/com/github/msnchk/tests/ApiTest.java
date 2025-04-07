@@ -43,7 +43,7 @@ public class ApiTest extends BaseApiTest {
     @Severity(SeverityLevel.CRITICAL)
     public void shouldCreateEntity() {
         var entity = EntityRequest.builder().build();
-        String id = RestAssured.given()
+        String entityId = RestAssured.given()
                 .spec(requestSpecification)
                 .body(entity)
                 .when()
@@ -51,11 +51,11 @@ public class ApiTest extends BaseApiTest {
                 .then()
                 .statusCode(200)
                 .extract().asString();
-        var entityResponse = apiHelper.getEntity(id);
+        var entityResponse = apiHelper.getEntity(entityId);
         SoftAssert softAssert = new SoftAssert();
         assertEntitiesEquals(softAssert, entity, entityResponse);
         softAssert.assertAll();
-        entitiesToCleanup.add(id);
+        entitiesToCleanup.add(entityId);
     }
 
     /**
@@ -67,17 +67,19 @@ public class ApiTest extends BaseApiTest {
     @Severity(SeverityLevel.CRITICAL)
     public void shouldDeleteEntity() {
         var entity = EntityRequest.builder().build();
-        String id = apiHelper.createEntity(entity);
+        String entityId = apiHelper.createEntity(entity);
         RestAssured.given()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .when()
-                .delete(deletePath + "/" + id)
+                .delete(deletePath + "/{id}")
                 .then()
                 .statusCode(204);
         RestAssured.given()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .when()
-                .get(getPath + "/" + id)
+                .get(getPath + "/{id}")
                 .then()
                 .statusCode(500);
     }
@@ -91,18 +93,19 @@ public class ApiTest extends BaseApiTest {
     @Severity(SeverityLevel.CRITICAL)
     public void shouldGetEntity() {
         var entity = EntityRequest.builder().build();
-        String id = apiHelper.createEntity(entity);
+        String entityId = apiHelper.createEntity(entity);
         var entityResponse = RestAssured.given()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .when()
-                .get(getPath + "/" + id)
+                .get(getPath + "/{id}")
                 .then()
                 .statusCode(200)
                 .extract().as(EntityResponse.class, ObjectMapperType.JACKSON_2);
         SoftAssert softAssert = new SoftAssert();
         assertEntitiesEquals(softAssert, entity, entityResponse);
         softAssert.assertAll();
-        entitiesToCleanup.add(id);
+        entitiesToCleanup.add(entityId);
     }
 
     /**
@@ -119,12 +122,12 @@ public class ApiTest extends BaseApiTest {
     public void shouldGetAllEntities() {
         String tag = "getAllTest";
         List<EntityRequest> entities = apiHelper.generateListOfTaggedEntities(tag);
-        List<String> ids = apiHelper.createEntities(entities);
+        List<String> entitiesIds = apiHelper.createEntities(entities);
         GetAllResponse response = RestAssured.given()
                 .spec(requestSpecification)
                 .when()
-                .formParam("title", tag)
-                .formParam("page", 1)
+                .queryParam("title", tag)
+                .queryParam("page", 1)
                 .get(getAllPath)
                 .then()
                 .statusCode(200)
@@ -136,7 +139,7 @@ public class ApiTest extends BaseApiTest {
             assertEntitiesEquals(softAssert, entities.get(i), responseEntities.get(i));
         }
         softAssert.assertAll();
-        entitiesToCleanup.addAll(ids);
+        entitiesToCleanup.addAll(entitiesIds);
     }
 
     /**
@@ -148,21 +151,22 @@ public class ApiTest extends BaseApiTest {
     @Description("Verify that an entity can be updated using PATCH and retrieved correctly")
     @Severity(SeverityLevel.CRITICAL)
     public void shouldPatchEntity() {
-        String id = apiHelper.createEntity(EntityRequest.builder().build());
+        String entityId = apiHelper.createEntity(EntityRequest.builder().build());
         var updatedEntity = new EntityRequest("New entity", true, List.of(12, 1000, 14, 2, 2),
                 new AdditionRequest("New info", 554));
         RestAssured.given()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .body(updatedEntity)
                 .when()
-                .patch(patchPath + "/" + id)
+                .patch(patchPath + "/{id}")
                 .then()
                 .statusCode(204);
-        var entityResponse = apiHelper.getEntity(id);
+        var entityResponse = apiHelper.getEntity(entityId);
         SoftAssert softAssert = new SoftAssert();
         assertEntitiesEquals(softAssert, updatedEntity, entityResponse);
         softAssert.assertAll();
-        entitiesToCleanup.add(id);
+        entitiesToCleanup.add(entityId);
     }
 
     /**

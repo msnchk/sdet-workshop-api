@@ -90,10 +90,10 @@ public class ApiHelper {
      */
     public void deleteEntity(String entityId) {
         RestAssured.given()
-                .log().all()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .when()
-                .delete(deletePath + "/" + entityId)
+                .delete(deletePath + "/{id}")
                 .then()
                 .statusCode(204);
     }
@@ -107,8 +107,9 @@ public class ApiHelper {
     public EntityResponse getEntity(String entityId) {
         return RestAssured.given()
                 .spec(requestSpecification)
+                .pathParam("id", entityId)
                 .when()
-                .get(getPath + "/" + entityId)
+                .get(getPath + "/{id}")
                 .then()
                 .statusCode(200)
                 .extract().as(EntityResponse.class, ObjectMapperType.JACKSON_2);
