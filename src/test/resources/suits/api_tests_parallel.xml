@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API_TestsSuite_Parallel">
+    <test name="APITestsParallel" thread-count="3" parallel="methods">
+        <classes>
+            <class name="com.github.msnchk.tests.ApiTest"/>
+        </classes>
+    </test>
+</suite>

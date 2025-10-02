@@ -1,0 +1,54 @@
+name: Java CI with Maven
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - api-test-v1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clone server repository
+        run: git clone https://github.com/bondarenkokate73/simbirsoft_sdet_project.git simbirsoft_sdet_project
+
+      - name: Start containers
+        run: |
+            cd simbirsoft_sdet_project
+            docker compose up --build -d
+            sleep 10
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run tests with Maven
+        run: mvn clean test
+        env:
+          ALLURE_RESULTS_DIRECTORY: "target/allure-results"
+
+      - name: Build test results
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: target/allure-results
+
+      - name: Upload Raw Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
+
+      - name: Stop containers
+        if: always()
+        run: |
+            cd simbirsoft_sdet_project
+            docker compose down
